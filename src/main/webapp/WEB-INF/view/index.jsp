@@ -357,7 +357,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <%--댓글 list--%>
+                <%--댓글 list--%> 
                 
             </div>
             <div class="clearfix"></div>
