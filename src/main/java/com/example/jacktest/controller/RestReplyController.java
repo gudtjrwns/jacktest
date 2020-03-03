@@ -112,11 +112,11 @@ public class RestReplyController{
                 noticeService.delReplyCount(replyOne.getNoticeid());
             }
 
-            entity = new ResponseEntity<String>("Delete Success", HttpStatus.OK);
+            entity = new ResponseEntity<>("Delete Success", HttpStatus.OK);
 
         } catch(Exception e) {
             e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            entity = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         return entity;

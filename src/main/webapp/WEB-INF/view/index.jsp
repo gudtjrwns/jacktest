@@ -29,50 +29,6 @@
                 <div class="x_content">
 
                     <h1><a onclick="getNoticePage();">getNoticePage</a></h1>
-                    <c:choose>
-                        <c:when test="${emptyValue eq true}">
-                            <div>
-                                <div class="pull-left">
-                                    <button type="button" class="btn btn-sm btn-info" onclick="location.href='./add'">
-                                        <i class="far fa-edit"></i> 신규등록
-                                    </button>
-                                </div>
-
-                                <div class="pull-right">
-                                    <div class="form-inline">
-                                        <%-- 검색 폼 --%>
-                                        <form method="get" action="./distList">
-                                            <div class="form-group">
-                                                <select name="searchType" class="form-control">
-                                                    <option ${(searchType == "title")?"selected":""} value="title">제목</option>
-                                                    <option ${(searchType == "contents")?"selected":""} value="contents">내용</option>
-                                                    <option ${(searchType == "writer")?"selected":""} value="writer">작성자</option>
-                                                    <option ${(searchType == "titleAndContents")?"selected":""} value="titleAndContents">제목+내용</option>
-                                                    <option ${(searchType == "contentsAndWriter")?"selected":""} value="contentsAndWriter">내용+작성자</option>
-                                                    <option ${(searchType == "selectAll")?"selected":""} value="name">제목+내용+작성자</option>
-                                                </select>
-                                            </div>
-    
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input type="text" name="searchValue" class="form-control" value="${searchValue}"/>
-                                                    <span class="input-group-btn">
-                                                        <button type="submit" class="btn btn-sm btn-default">검색</button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <%-- 검색 폼 --%>
-                                    </div>
-                                </div>
-                            
-                                <div class="clearfix"></div>
-                                <div class="alert alert-info" role="alert">
-                                    <b>Info!</b> 등록된 게시글이 없습니다. 신규 등록해주세요.
-                                </div>
-                            </div>
-                        </c:when>
-                        <c:when test="${emptyValue eq false}">
                         <div>
                             <div class="pull-left">
                                 <div class="form-inline">
@@ -147,145 +103,122 @@
                                     <th class="text-center">삭제</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                    <form method="POST" action="./deleteAllExecute" id="submitForm">
-                                <c:forEach items="${noticeList.content}" var="noticeList" varStatus="idx">
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="checkedArr" value="${noticeList.id}"/>
-                                    </td>
-                                    <td>${idx.count}</td>
-                                    <td>
-                                        <a class="font-blue text-bold underline pointer" style="cursor: pointer;" data-toggle="modal" data-target=".view-modal" data-whatever="${noticeList.id}">
-                                            ${noticeList.title}
-                                        </a>
-                                    </td>
-                                    <td>${noticeList.writer}</td>
-                                    <td><fmt:formatDate value="${noticeList.credate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
-                                    <td data-whatever="${noticeList.id}" class="view-count-${noticeList.id}">${noticeList.viewcnt}</td>
-                                    <td data-whatever="${noticeList.id}" class="reply-count-${noticeList.id}">${noticeList.replycnt}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-xs btn-success m-0" onclick="location.href='./edit?noticeId=${noticeList.id}'">편집</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-xs btn-danger m-0" data-toggle="modal" data-target=".del-modal" data-whatever="${noticeList.id}">삭제</button>
-                                    </td>
-                                </tr>
-                                </c:forEach>
-                                    </form>
-                                </tbody>
+                                <form method="POST" action="./deleteAllExecute" id="submitForm">
+                                    <tbody id="listContainer">
+                                    </tbody>
+                                </form>
                             </table>
                         </div>
 
                         
-                        <%-- 페이징 설정 --%>
-                        <c:if test="${totalPages <= endPage}">
-                            <c:set var="endPage" value="${totalPages}"></c:set>
-                            <c:set var="hasNext" value="false"></c:set>
-                        </c:if>
-                        <%-- 페이징 설정 --%>
+<%--                        &lt;%&ndash; 페이징 설정 &ndash;%&gt;--%>
+<%--                        <c:if test="${totalPages <= endPage}">--%>
+<%--                            <c:set var="endPage" value="${totalPages}"></c:set>--%>
+<%--                            <c:set var="hasNext" value="false"></c:set>--%>
+<%--                        </c:if>--%>
+<%--                        &lt;%&ndash; 페이징 설정 &ndash;%&gt;--%>
 
-                        <%-- list 페이징 --%>
-                        <c:choose>
-                            <c:when test="${pageNameValue eq 'list'}">
-                                <div class="row" style="padding-top: 20px;">
-                                    <div class="col-md-offset-5">
-                                        <div class="btn-toolbar">
-                                            <div class="btn-group">
-                                                <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${startPage-2}'"><<</button>
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:forEach begin="${startPage}" end="${endPage}" step="1" var="count" >
-                                                    <c:choose>
-                                                        <c:when test="${(currentPage) eq count}">
-                                                            <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>
-                                                        </c:when>
-                                                        <c:when test="${(currentPage) != count}">
-                                                            <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:forEach>
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='#'">></button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}'">></button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:choose>
-                                                    <c:when test="${endPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:when>
-                            <%-- list 페이징 --%>
+<%--                        &lt;%&ndash; list 페이징 &ndash;%&gt;--%>
+<%--                        <c:choose>--%>
+<%--                            <c:when test="${pageNameValue eq 'list'}">--%>
+<%--                                <div class="row" style="padding-top: 20px;">--%>
+<%--                                    <div class="col-md-offset-5">--%>
+<%--                                        <div class="btn-toolbar">--%>
+<%--                                            <div class="btn-group">--%>
+<%--                                                <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${startPage-2}'"><<</button>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${currentPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                                <c:forEach begin="${startPage}" end="${endPage}" step="1" var="count" >--%>
+<%--                                                    <c:choose>--%>
+<%--                                                        <c:when test="${(currentPage) eq count}">--%>
+<%--                                                            <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>--%>
+<%--                                                        </c:when>--%>
+<%--                                                        <c:when test="${(currentPage) != count}">--%>
+<%--                                                            <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>--%>
+<%--                                                        </c:when>--%>
+<%--                                                    </c:choose>--%>
+<%--                                                </c:forEach>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${currentPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='#'">></button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}'">></button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${endPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                            </c:when>--%>
+<%--                            &lt;%&ndash; list 페이징 &ndash;%&gt;--%>
 
-                            <%-- distList 페이징 --%>
-                            <c:when test="${pageNameValue eq 'distList'}">
-                                <div class="row" style="padding-top: 20px;">
-                                    <div class="col-md-offset-5">
-                                        <div class="btn-toolbar">
-                                            <div class="btn-group">
-                                                <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${startPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><<</button>
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><</button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><</button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:forEach begin="${startPage}" end="${endPage}" step="1" var="count" >
-                                                    <c:choose>
-                                                        <c:when test="${(currentPage) eq count}">
-                                                            <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}&searchType=${searchType}&searchValue=${searchValue}'">${count}</button>
-                                                        </c:when>
-                                                        <c:when test="${(currentPage) != count}">
-                                                            <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}&searchType=${searchType}&searchValue=${searchValue}'">${count}</button>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:forEach>
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='#'">></button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}&searchType=${searchType}&searchValue=${searchValue}'">></button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:choose>
-                                                    <c:when test="${endPage eq totalPages}">
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}&searchType=${searchType}&searchValue=${searchValue}'">>></button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}&searchType=${searchType}&searchValue=${searchValue}'">>></button>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:when>
-                        </c:choose>
-                        <%-- distList 페이징 --%>
+<%--                            &lt;%&ndash; distList 페이징 &ndash;%&gt;--%>
+<%--                            <c:when test="${pageNameValue eq 'distList'}">--%>
+<%--                                <div class="row" style="padding-top: 20px;">--%>
+<%--                                    <div class="col-md-offset-5">--%>
+<%--                                        <div class="btn-toolbar">--%>
+<%--                                            <div class="btn-group">--%>
+<%--                                                <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${startPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><<</button>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${currentPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><</button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}&searchType=${searchType}&searchValue=${searchValue}'"><</button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                                <c:forEach begin="${startPage}" end="${endPage}" step="1" var="count" >--%>
+<%--                                                    <c:choose>--%>
+<%--                                                        <c:when test="${(currentPage) eq count}">--%>
+<%--                                                            <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}&searchType=${searchType}&searchValue=${searchValue}'">${count}</button>--%>
+<%--                                                        </c:when>--%>
+<%--                                                        <c:when test="${(currentPage) != count}">--%>
+<%--                                                            <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}&searchType=${searchType}&searchValue=${searchValue}'">${count}</button>--%>
+<%--                                                        </c:when>--%>
+<%--                                                    </c:choose>--%>
+<%--                                                </c:forEach>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${currentPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='#'">></button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}&searchType=${searchType}&searchValue=${searchValue}'">></button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                                <c:choose>--%>
+<%--                                                    <c:when test="${endPage eq totalPages}">--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}&searchType=${searchType}&searchValue=${searchValue}'">>></button>--%>
+<%--                                                    </c:when>--%>
+<%--                                                    <c:otherwise>--%>
+<%--                                                        <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}&searchType=${searchType}&searchValue=${searchValue}'">>></button>--%>
+<%--                                                    </c:otherwise>--%>
+<%--                                                </c:choose>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                            </c:when>--%>
+<%--                        </c:choose>--%>
+<%--                        &lt;%&ndash; distList 페이징 &ndash;%&gt;--%>
 
-                    </c:when>
-                    <c:otherwise></c:otherwise>
-                </c:choose>
+<%--                    </c:when>--%>
+<%--                    <c:otherwise></c:otherwise>--%>
+<%--                </c:choose>--%>
                 </div>
             </div>
         </div>
@@ -483,30 +416,6 @@
 
 <!-- 파일 다운로드 -->
 <script>
-    <%--function downloadFileData2(data) {--%>
-    <%--    $.ajax({--%>
-    <%--        type: 'GET',--%>
-    <%--        url: '${request.getContextPath}/downloadNoticeFileData/id=' + data,--%>
-    <%--        dataType: 'text',--%>
-    <%--        data: {},--%>
-    <%--        success: function (data) {--%>
-    <%--            if(data === null) {--%>
-    <%--                alert("다운로드 실패");--%>
-    <%--            }else {--%>
-    <%--                alert("다운로드 성공!");--%>
-    <%--                console.log(data);--%>
-    <%--            }--%>
-    <%--        },--%>
-    <%--        error: function (request, status, error){--%>
-    <%--            alert("에러가 발생했습니다.");--%>
-    <%--            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);--%>
-    <%--        },--%>
-    <%--        complete: function (data){--%>
-    <%--        }--%>
-    <%--    })--%>
-    <%--}--%>
-
-
     function downloadFileData(data) {
         location.href = './downloadNoticeFileData/id=' + data;
     }
@@ -842,7 +751,14 @@
 
 
 <script>
+    $(()=>{
+        getNoticePage();
+
+        }
+    );
+
     function getNoticePage() {
+        // alert("들어왔다");
         $.ajax({
             type: 'GET',
             url: '${request.getContextPath}/getNoticePage',
@@ -850,8 +766,35 @@
             data: {},
             success: function (data) {
 
-                console.log(data);
+                var innerValue = '';
 
+                for (var i = 0; i < data.noticeList.content.length; i++) {
+
+                    innerValue += '\n' +
+                        '                                        <tr>\n' +
+                        '                                            <td>\n' +
+                        '                                                <input type="checkbox" name="checkedArr" value="'+data.noticeList.content[i].id+'"/>\n' +
+                        '                                            </td>\n' +
+                        '                                            <td>' + (i + 1) + '</td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <a class="font-blue text-bold underline pointer" style="cursor: pointer;" data-toggle="modal" data-target=".view-modal" data-whatever="' + data.noticeList.content[i].id + '">' + data.noticeList.content[i].title + '</a>' +
+                        '                                            </td>\n' +
+                        '                                            <td>'+data.noticeList.content[i].writer+'</td>\n' +
+                        '                                            <td>'+timestampToStringDate(data.noticeList.content[i].credate)+'</td>\n' +
+                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="view-count-noticeList.id}">'+data.noticeList.content[i].viewcnt+'</td>\n' +
+                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="reply-count-noticeList.id">'+data.noticeList.content[i].replycnt+'</td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <button type="button" class="btn btn-xs btn-success m-0" onclick="location.href=\'./edit?noticeId='+data.noticeList.content[i].id+'\'">편집</button>\n' +
+                        '                                            </td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <button type="button" class="btn btn-xs btn-danger m-0" data-toggle="modal" data-target=".del-modal" data-whatever="'+data.noticeList.content[i].id+'">삭제</button>\n' +
+                        '                                            </td>\n' +
+                        '                                        </tr>';
+                }
+
+
+
+                $("#listContainer").html(innerValue);
             },
             error: function (request, status, error){
                 alert("에러가 발생했습니다.");

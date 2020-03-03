@@ -12,6 +12,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
@@ -46,14 +47,14 @@ public class RestNoticeController {
 
     // 게시글 정보 가져오기
     @PostMapping("/findByNoticeOne/id={id}")
-    public NoticeValue findByNoticeOne(@PathVariable("id") Long id) {
+    public ResponseEntity findByNoticeOne(@PathVariable("id") Long id) {
 
         // 조회수 추가
         noticeService.addViewCount(id);
 
         NoticeValue noticeValueOne = noticeService.getNoticeValue(id);
 
-        return noticeValueOne;
+        return ResponseEntity.ok(noticeValueOne);
     }
 
 
@@ -65,11 +66,9 @@ public class RestNoticeController {
         Page<Notice> noticePage = noticeService.pageAllNotice(pageable);
 
         if (noticePage.isEmpty()) {
-            modelMap.addAttribute("emptyValue", true);
-            return ResponseEntity.ok(modelMap);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
 
         } else {
-            modelMap.addAttribute("emptyValue", false);
             modelMap.addAttribute("noticeList", noticePage);
 
             // 페이징에 필요한 값 model 전송
@@ -89,20 +88,18 @@ public class RestNoticeController {
 
 
     // 게시판 - 검색 목록
-    @GetMapping(value = "/getNoticeDistPage")
+    @GetMapping(value = "/getNoticeDistPage/searchType={searchType}&searchValue={searchValue}")
     public ResponseEntity showNoticeDistList(ModelMap modelMap,
-                                             @RequestParam(value="searchType", required = false, defaultValue = "title") String searchType,
-                                             @RequestParam(value="searchValue", required = false, defaultValue = "") String searchValue,
+                                             @PathVariable(value="searchType", required = false) String searchType,
+                                             @PathVariable(value="searchValue", required = false) String searchValue,
                                              @PageableDefault(size = 10, page = 0) Pageable pageable) {
 
         Page<Notice> noticeDistPage = noticeService.pageAllNoticeDist(pageable, searchType, searchValue);
 
         if (noticeDistPage.isEmpty()) {
-            modelMap.addAttribute("emptyValue", true);
-            return ResponseEntity.ok(modelMap);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
 
         } else {
-            modelMap.addAttribute("emptyValue", false);
             modelMap.addAttribute("noticeList", noticeDistPage);
 
             // 페이징에 필요한 값 model 전송
@@ -121,70 +118,57 @@ public class RestNoticeController {
     }
 
 
-    // 게시판 - 신규 등록
-    @GetMapping(value = "/add")
-    public ResponseEntity showNoticeAdd(ModelMap modelMap) {
-        modelMap.addAttribute("notice", new Notice());
-        return ResponseEntity.ok(modelMap);
-    }
+//    // 게시판 - 신규 등록
+//    @GetMapping(value = "/add")
+//    public ResponseEntity showNoticeAdd(ModelMap modelMap) {
+//        modelMap.addAttribute("notice", new Notice());
+//        return ResponseEntity.ok(modelMap);
+//    }
 
 
     // 게시판 - 수정
-    @GetMapping(value = "/edit")
-    public ResponseEntity showNoticeEdit(ModelMap modelMap,
-                                         @RequestParam("noticeId") Long noticeId) {
+    @GetMapping(value = "/edit/noticeId={noticeId}")
+    public ResponseEntity showNoticeEdit(@PathVariable("noticeId") Long noticeId) {
 
         Optional<Notice> byId = noticeService.optionalNotice(noticeId);
 
         if (byId.isPresent()) {
-            Notice noticeOne = noticeService.getNoticeOne(noticeId);
-
-            modelMap.addAttribute("emptyValue", false);
-            modelMap.addAttribute("noticeId", noticeId);
-            modelMap.addAttribute("noticeOne", noticeOne);
-
-            return ResponseEntity.ok(modelMap);
+            return ResponseEntity.ok(HttpStatus.OK);
 
         } else {
-            modelMap.addAttribute("emptyValue", true);
-            return ResponseEntity.ok(modelMap);
+            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
     }
 
 
     // 게시판 - 신규 등록 - 실행
-    @PostMapping(value = "/addExecute")
+    @PostMapping(value = "/addExecute/file={uploadFile01}")
     public ResponseEntity showNoticeAddExecute(@RequestBody @Valid Notice notice,
                                                BindingResult bindingResult,
-                                               @RequestParam(value = "uploadFile01", required = false, defaultValue = "NONE") MultipartFile file01,
+                                               @PathVariable(value = "uploadFile01", required = false) MultipartFile file01,
                                                ModelMap modelMap) throws IOException {
         if (bindingResult.hasErrors()) {
-            modelMap.addAttribute("notice", notice);
-            return ResponseEntity.ok(modelMap);
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 
         } else {
             noticeService.saveNotice(notice, file01);
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(HttpStatus.OK);
         }
     }
 
 
     // 게시판 - 수정 - 실행
-    @PutMapping(value = "/editExecute/noticeId={noticeId}")
+    @PutMapping(value = "/editExecute/noticeId={noticeId}&file={uploadFile01}")
     public ResponseEntity showNoticeEditExecute(@RequestBody @Valid Notice notice,
                                                 BindingResult bindingResult,
-                                                @RequestParam("noticeId") Long noticeId,
-                                                @RequestParam(value = "uploadFile01", required = false, defaultValue = "NONE") MultipartFile file01,
+                                                @PathVariable("noticeId") Long noticeId,
+                                                @PathVariable(value = "uploadFile01", required = false) MultipartFile file01,
                                                 ModelMap modelMap) throws IOException {
         if (bindingResult.hasErrors()) {
-            modelMap.addAttribute("notice", notice);
-            modelMap.addAttribute("uploadFile01", file01);
-
-            return ResponseEntity.ok(modelMap);
-
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
         } else {
             noticeService.editNotice(notice, noticeId, file01);
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(HttpStatus.OK);
         }
     }
 
@@ -193,7 +177,7 @@ public class RestNoticeController {
     @DeleteMapping(value = "/deleteExecute/noticeId={noticeId}")
     public ResponseEntity showNoticeDeleteExecute(@PathVariable("noticeId") Long noticeId){
         noticeService.deleteNoticeOne(noticeId);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
@@ -201,15 +185,15 @@ public class RestNoticeController {
     @DeleteMapping(value = "/deleteAllExecute/noticeIdList={idList}")
     public ResponseEntity showNoticeDeleteAllExecute(@PathVariable("idList") List<Long> idList) {
         noticeService.deleteAllNotice(idList);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     // 게시판 - 파일 다운로드
     @GetMapping(value = "/downloadNoticeFileData/noticeId={noticeId}")
-    public ResponseEntity showNoticeFileDataDownload(@PathVariable("noticeId") Long noticeId) throws IOException {
+    public ResponseEntity<InputStreamResource> showNoticeFileDataDownload(@PathVariable("noticeId") Long noticeId) throws IOException {
         ResponseEntity<InputStreamResource> responseEntity = noticeService.downloadNoticeFile(noticeId);
-        return ResponseEntity.ok(responseEntity);
+        return responseEntity;
     }
 
 
