@@ -485,11 +485,14 @@
         $.ajax({
             type: 'GET',
             url: '${request.getContextPath}/downloadNoticeFileData/id=' + data,
-            dataType: 'json',
+            dataType: 'text',
             data: {},
             success: function (data) {
                 if(data === null) {
                     alert("다운로드 실패");
+                }else {
+                    alert("다운로드 성공!");
+                    console.log(data);
                 }
             },
             error: function (request, status, error){
