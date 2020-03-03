@@ -1,5 +1,3 @@
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="kor">
@@ -25,8 +23,7 @@
                 </div>
 
                 <div class="x_content">
-                    <spring:form action="./editExecute" method="post" id="submitForm" modelAttribute="noticeOne" enctype="multipart/form-data">
-                    <input type="hidden" name="noticeId" value=${noticeId}>
+                    <form action="/" method="post" enctype="multipart/form-data" id="submitForm" onsubmit="submitValidation()">
                         <div class="col-md-12">
                             <table class="table table-bordered m-0">
                                 <colgroup>
@@ -38,24 +35,21 @@
                                 <tr>
                                     <th class="text-center">제목</th>
                                     <td>
-                                        <spring:input path="title" type="text" class="form-control" required="required" placeholder="제목을 입력해 주세요."/>
-                                        <spring:errors path="title"></spring:errors>
+                                        <input type="text" name="title" onchange="titleChange()" class="form-control" required="required" placeholder="제목을 입력해 주세요." />
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <th class="text-center">내용</th>
                                     <td>
-                                        <spring:textarea path="contents" row="5" style="height: 50px; resize: none;" class="form-control" placeholder="내용을 입력해 주세요."/>
-                                        <spring:errors path="contents"></spring:errors>
+                                        <textarea name="contents" rows="5" style="resize: none; overflow: auto;" class="form-control" placeholder="내용을 입력해 주세요." ></textarea>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <th class="text-center">작성자 이름</th>
                                     <td>
-                                        <input name="writer" value="${noticeOne.writer}" type="text" class="form-control" readonly/>
-                                        <spring:errors path="writer"></spring:errors>
+                                        <input type="text" name="writer" class="form-control" required="required" placeholder="작성자 이름을 입력해 주세요." readonly />
                                     </td>
                                 </tr>
 
@@ -64,7 +58,7 @@
                                     <td>
                                         <div class="form-group m-0">
                                             <div class="input-group m-0">
-                                                <input type="text" class="form-control" value="${noticeOne.filename}" id="iptFileName01" placeholder="우측 버튼을 통해 첨부파일을 선택해주세요." readonly/>
+                                                <input type="text" class="form-control" id="iptFileName01" placeholder="우측 버튼을 통해 첨부파일을 선택해주세요." readonly/>
                                                 <div class="input-group-btn">
                                                     <button type="button" class="btn btn-info btn-sm" id="btnFile01">파일첨부</button>
                                                 </div>
@@ -90,7 +84,7 @@
                                 <button type="button" class="btn btn-default btn-sm" onclick="location.href='./list'">취소</button>
                             </div>
                         </div>
-                    </spring:form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -124,16 +118,70 @@
 <!-- 확인 모달 -->
 
 
+<script>
+    // function getUrlParams(){
+    //     var params = {};
+    //     window.location.search.replace(
+    //         /[?&]+([^=&]+)=([^&]*)gi,
+    //             function(str, key, value){params[key] = value;}
+    //     );
+    //     return params;
+    // }
+</script>
+
+
+
+
+<%-- 폼 전송 함수 --%>
+<script>
+    var title = $("input[name='title']")[0];
+    var contents = $("textarea[name='contents']")[0];
+    var writer = $("input[name='writer']")[0];
+    var uploadFile01 = $("input[name='uploadFile01']")[0];
+
+    function transferForm() {
+        var form = $("#submitForm")[0];
+        var formData = new FormData();
+
+        formData.append("title", title.value);
+        formData.append("contents", contents.value);
+        formData.append("writer", writer.value);
+        formData.append("uploadFile01", uploadFile01.files[0]);
+
+
+        $.ajax({
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            url: '${request.getContextPath}/addExecute',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert("저장 완료!");
+                location.href='./list';
+            },
+            error: function (request, status, error){
+                alert("에러가 발생했습니다.");
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            complete: function (data){
+            }
+        })
+    }
+</script>
+<%-- 폼 전송 함수 --%>
+
+
+
+
 <!-- form-submit 클릭 이벤트 -->
 <script>
-    var form = document.querySelector('#submitForm');
-
     $('#submitForm').on('submit', function(e){
         $('#myModal').modal('show');    // Modal 확인창을 보여준다.
 
         // Modal 확인창에서 'ok' 클릭하면 바로 Submit 한다.
         $('#saveChanges').click(function () {
-            form.submit();
+            transferForm();
         });
 
         e.preventDefault();

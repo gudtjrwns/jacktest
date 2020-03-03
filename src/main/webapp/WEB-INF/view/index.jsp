@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="kor">
@@ -27,88 +25,85 @@
                 </div>
 
                 <div class="x_content">
-
-                    <h1><a onclick="getNoticePage();">getNoticePage</a></h1>
-                        <div>
-                            <div class="pull-left">
-                                <div class="form-inline">
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-sm btn-info" onclick="location.href='./add'">
-                                            <i class="far fa-edit"></i> 신규등록
-                                        </button>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" id="deleteAllBtn" class="btn btn-sm btn-danger">
-                                            <i class="far fa-edit"></i> 삭제
-                                        </button>
-                                    </div>
+                    <div>
+                        <div class="pull-left">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="location.href='./add'">
+                                        <i class="far fa-edit"></i> 신규등록
+                                    </button>
                                 </div>
-                                
-                            </div>
-                            
-                            <div class="pull-right">
-                                <div class="form-inline">
-                                    <%-- 검색 폼 --%>
-                                    <form method="get" action="./distList">
-                                        <div class="form-group">
-                                            <select name="searchType" class="form-control">
-                                                <option ${(searchType == "title")?"selected":""} value="title">제목</option>
-                                                <option ${(searchType == "contents")?"selected":""} value="contents">내용</option>
-                                                <option ${(searchType == "writer")?"selected":""} value="writer">작성자</option>
-                                                <option ${(searchType == "titleAndContents")?"selected":""} value="titleAndContents">제목+내용</option>
-                                                <option ${(searchType == "contentsAndWriter")?"selected":""} value="contentsAndWriter">내용+작성자</option>
-                                                <option ${(searchType == "selectAll")?"selected":""} value="name">제목+내용+작성자</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input type="text" name="searchValue" class="form-control" value="${searchValue}"/>
-                                                <span class="input-group-btn">
-                                                    <button type="submit" class="btn btn-sm btn-default">검색</button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <%-- 검색 폼 --%>
+                                <div class="form-group">
+                                    <button type="button" id="deleteAllBtn" class="btn btn-sm btn-danger">
+                                        <i class="far fa-edit"></i> 삭제
+                                    </button>
                                 </div>
                             </div>
-                        </div>                    
-
-                        <div>
-                            <table class="table table-bordered text-center">
-                                <colgroup>
-                                    <col width="8%"/>
-                                    <col width="8%"/>
-                                    <col width="*%"/>
-                                    <col width="12%"/>
-                                    <col width="12%"/>
-                                    <col width="8%"/>
-                                    <col width="8%"/>
-                                    <col width="10%"/>
-                                    <col width="10%"/>
-                                </colgroup>
-                                <thead>
-                                <tr class="bg-blue-sky" style="background-color: skyblue;">
-                                    <th class="text-center">
-                                        <input type="checkbox" name="checked" id="allChecker"/>
-                                    </th>
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">제목</th>
-                                    <th class="text-center">작성자</th>
-                                    <th class="text-center">작성일</th>
-                                    <th class="text-center">조회수</th>
-                                    <th class="text-center">댓글수</th>
-                                    <th class="text-center">편집</th>
-                                    <th class="text-center">삭제</th>
-                                </tr>
-                                </thead>
-                                <form method="POST" action="./deleteAllExecute" id="submitForm">
-                                    <tbody id="listContainer">
-                                    </tbody>
-                                </form>
-                            </table>
                         </div>
+
+                        <div class="pull-right">
+                            <div class="form-inline">
+                                <%-- 검색 폼 --%>
+                                <form method="get" action="./distList">
+                                    <div class="form-group">
+                                        <select name="searchType" class="form-control">
+                                            <option value="title">제목</option>
+                                            <option value="contents">내용</option>
+                                            <option value="writer">작성자</option>
+                                            <option value="titleAndContents">제목+내용</option>
+                                            <option value="contentsAndWriter">내용+작성자</option>
+                                            <option value="name">제목+내용+작성자</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="searchValue" class="form-control"/>
+                                            <span class="input-group-btn">
+                                                <button type="submit" class="btn btn-sm btn-default">검색</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+                                <%-- 검색 폼 --%>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered text-center">
+                            <colgroup>
+                                <col width="8%"/>
+                                <col width="8%"/>
+                                <col width="*%"/>
+                                <col width="12%"/>
+                                <col width="12%"/>
+                                <col width="8%"/>
+                                <col width="8%"/>
+                                <col width="10%"/>
+                                <col width="10%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="bg-blue-sky" style="background-color: skyblue;">
+                                <th class="text-center">
+                                    <input type="checkbox" name="checked" id="allChecker"/>
+                                </th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">제목</th>
+                                <th class="text-center">작성자</th>
+                                <th class="text-center">작성일</th>
+                                <th class="text-center">조회수</th>
+                                <th class="text-center">댓글수</th>
+                                <th class="text-center">편집</th>
+                                <th class="text-center">삭제</th>
+                            </tr>
+                            </thead>
+                            <form method="POST" action="./deleteAllExecute" id="submitForm">
+                                <tbody id="listContainer">
+                                </tbody>
+                            </form>
+                        </table>
+                    </div>
 
                         
 <%--                        &lt;%&ndash; 페이징 설정 &ndash;%&gt;--%>
@@ -367,6 +362,107 @@
 <!-- reply delete 모달 -->
 
 
+
+
+
+
+<%-- list --%>
+<script>
+    $(()=>{
+            getNoticePage();
+        }
+    );
+
+    function getNoticePage() {
+
+        $.ajax({
+            type: 'GET',
+            url: '${request.getContextPath}/getNoticePage',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+
+                var innerValue = '';
+
+                for (var i = 0; i < data.noticeList.content.length; i++) {
+
+                    innerValue += '\n' +
+                        '                                        <tr>\n' +
+                        '                                            <td>\n' +
+                        '                                                <input type="checkbox" name="checkedArr" value="'+data.noticeList.content[i].id+'"/>\n' +
+                        '                                            </td>\n' +
+                        '                                            <td>' + (i + 1) + '</td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <a class="font-blue text-bold underline pointer" style="cursor: pointer;" data-toggle="modal" data-target=".view-modal" data-whatever="' + data.noticeList.content[i].id + '">' + data.noticeList.content[i].title + '</a>' +
+                        '                                            </td>\n' +
+                        '                                            <td>'+data.noticeList.content[i].writer+'</td>\n' +
+                        '                                            <td>'+timestampToStringDate(data.noticeList.content[i].credate)+'</td>\n' +
+                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="view-count-'+data.noticeList.content[i].id+'}">'+data.noticeList.content[i].viewcnt+'</td>\n' +
+                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="reply-count-'+data.noticeList.content[i].id+'">'+data.noticeList.content[i].replycnt+'</td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <button type="button" class="btn btn-xs btn-success m-0" onclick="location.href=\'./edit?noticeId='+data.noticeList.content[i].id+'\'">편집</button>\n' +
+                        '                                            </td>\n' +
+                        '                                            <td>\n' +
+                        '                                                <button type="button" class="btn btn-xs btn-danger m-0" data-toggle="modal" data-target=".del-modal" data-whatever="'+data.noticeList.content[i].id+'">삭제</button>\n' +
+                        '                                            </td>\n' +
+                        '                                        </tr>';
+                }
+
+                $("#listContainer").html(innerValue);
+            },
+            error: function (request, status, error){
+                alert("에러가 발생했습니다.");
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            complete: function (data){
+            }
+        })
+    }
+</script>
+<%-- list --%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 파일 다운로드 -->
+<script>
+    function downloadFileData(data) {
+        location.href = './downloadNoticeFileData/id=' + data;
+    }
+</script>
+
+<!-- 파일 다운로드 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- view 모달 -->
 <script>
     $('.view-modal').on('show.bs.modal', function (event) {
@@ -393,14 +489,15 @@
                 }
 
                 innerValue = '<input type="hidden" name="getId" value="' + data.id + '"/>'+
-                            '<tr><th class="text-center">제목</th><td>' + data.title + '</td></tr>'+
-                            '<tr><th class="text-center">내용</th><td>' + data.contents + '</td></tr>'+
-                            '<tr><th class="text-center">작성자</th><td>' + data.writer + '</td></tr>'+
-                            '<tr><th class="text-center">작성일</th><td>' + data.credate + '</td></tr>'+
-                            '<tr><th class="text-center">조회수</th><td>' + data.viewcnt + '</td></tr>'+
-                            '<tr><th class="text-center">댓글수</th><td>' + data.replycnt + '</td></tr>'+
-                            '<tr><th class="text-center">파일</th><td>' + innerFileValue + '</td></tr>';
-                
+                    '<tr><th class="text-center">제목</th><td>' + data.title + '</td></tr>'+
+                    '<tr><th class="text-center">내용</th><td>' + data.contents + '</td></tr>'+
+                    '<tr><th class="text-center">작성자</th><td>' + data.writer + '</td></tr>'+
+                    '<tr><th class="text-center">작성일</th><td>' + data.credate + '</td></tr>'+
+                    '<tr><th class="text-center">조회수</th><td>' + data.viewcnt + '</td></tr>'+
+                    '<tr><th class="text-center">댓글수</th><td>' + data.replycnt + '</td></tr>'+
+                    '<tr><th class="text-center">파일</th><td>' + innerFileValue + '</td></tr>';
+
+
                 viewContainer.innerHTML = innerValue;
                 viewCountBox[0].innerHTML = data.viewcnt;
             }
@@ -414,14 +511,32 @@
 <!-- view 모달 -->
 
 
-<!-- 파일 다운로드 -->
-<script>
-    function downloadFileData(data) {
-        location.href = './downloadNoticeFileData/id=' + data;
-    }
-</script>
 
-<!-- 파일 다운로드 -->
+<!-- delete 모달 -->
+<script>
+    $('.del-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var recipient1 = button.data('whatever');
+        var getId = document.getElementsByName("getId");
+        var getName = document.getElementById("getName");
+        var innerValue = '';
+
+        $.ajax({
+            type: 'POST',
+            url: '${request.getContextPath}/findByNoticeOne/id=' + recipient1,
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                innerValue = '<b>"' + data.writer + '님의 ' + data.title + '"</b>';
+
+                getName.innerHTML = innerValue;
+                getId[1].value = data.id;
+            }
+        })
+    });
+</script>
+<!-- delete 모달 -->
+
 
 
 <!-- 댓글 -->
@@ -437,18 +552,18 @@
             data: {},
             success: function (data) {
                 var innerText = '';
-                
+
                 if(data.length === 0){
                     innerText = '<tr><td>댓글이 없습니다.</td></tr>';
 
                 }else {
                     for(var i=0; i<data.length; i++){
                         innerText += '<tr><td><div>'+
-                                    '' + data[i].writer + ' <br> ' + timestampToStringDate(data[i].credate) + ''+
-                                    '</div>'+
-                                    '<p style="margin: 10px 0;">'+data[i].contents+'</p>'+
-                                    '<div><span style="color:blue; font-weight:500; cursor:pointer;" onclick="replyEditFnc(' + data[i].id + ');">수정</span> / <span style="color:red; font-weight:500; cursor:pointer;" data-toggle="modal" data-target=".replyDel-modal" data-whatever="'+data[i].id+'" data-value="'+data[i].noticeid+'">삭제</span></div>'+
-                                    '</td></tr>';
+                            '' + data[i].writer + ' <br> ' + timestampToStringDate(data[i].credate) + ''+
+                            '</div>'+
+                            '<p style="margin: 10px 0;">'+data[i].contents+'</p>'+
+                            '<div><span style="color:blue; font-weight:500; cursor:pointer;" onclick="replyEditFnc(' + data[i].id + ');">수정</span> / <span style="color:red; font-weight:500; cursor:pointer;" data-toggle="modal" data-target=".replyDel-modal" data-whatever="'+data[i].id+'" data-value="'+data[i].noticeid+'">삭제</span></div>'+
+                            '</td></tr>';
                     }
                 }
 
@@ -493,26 +608,26 @@
             data: {},
             success: function (data) {
                 var innerText = '';
-                
+
                 // 댓글 채워넣기
                 innerText = '<tr><td><div>'+
-                            '' + data.writer + ' <br> ' + timestampToStringDate(data.credate) + ''+
-                            '</div>'+
-                            '<p style="margin: 10px 0;">'+data.contents+'</p>'+
-                            '<div><span style="color:blue; font-weight:500; cursor:pointer;" onclick="replyEditFnc(' + data.id + ');">수정</span> / <span style="color:red; font-weight:500; cursor:pointer;" data-toggle="modal" data-target=".replyDel-modal" data-whatever="'+data.id+'" data-value="'+data.noticeid+'">삭제</span></div>'+
-                            '</td></tr>';
+                    '' + data.writer + ' <br> ' + timestampToStringDate(data.credate) + ''+
+                    '</div>'+
+                    '<p style="margin: 10px 0;">'+data.contents+'</p>'+
+                    '<div><span style="color:blue; font-weight:500; cursor:pointer;" onclick="replyEditFnc(' + data.id + ');">수정</span> / <span style="color:red; font-weight:500; cursor:pointer;" data-toggle="modal" data-target=".replyDel-modal" data-whatever="'+data.id+'" data-value="'+data.noticeid+'">삭제</span></div>'+
+                    '</td></tr>';
 
                 $("#replyContainer").append(innerText);
 
                 alert("댓글 등록 성공!");
 
-                // 작성 댓글 input박스에서 지우기 
+                // 작성 댓글 input박스에서 지우기
                 $("#contentsAdd").val('');
                 $("#writerAdd").val('');
 
                 // 게시판 list에 댓글수 추가하기
                 replyCountBox[0].innerHTML = parseInt(replyCountValue) + 1;
-                
+
             },
             error: function (request, status, error){
                 alert("에러가 발생했습니다.");
@@ -539,7 +654,7 @@
             success: function (data) {
 
                 showReplyList(data.noticeid);
-                
+
                 $("#editWrap").hide();      // 댓글 편집 wrap 숨기기
                 $("#addWrap").show();       // 댓글 추가 wrap 보여주기
                 $("#contentsEdit").val(""); // 댓글 내용 없애기
@@ -570,7 +685,7 @@
     $("#replyDelBtn").on('click', function(){
         var replyCountBox = document.getElementsByClassName("reply-count-"+noticeId);
         var replyCountValue = replyCountBox[0].innerHTML;
-        
+
         $.ajax({
             type: 'DELETE',
             url: '${request.getContextPath}/replyDeleteExecute/distName=notice&replyId=' + recipient1,
@@ -639,30 +754,8 @@
 </script>
 <!-- 댓글 -->
 
-<!-- delete 모달 -->
-<script>
-    $('.del-modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var recipient1 = button.data('whatever');
-        var getId = document.getElementsByName("getId");
-        var getName = document.getElementById("getName");
-        var innerValue = '';
 
-        $.ajax({
-            type: 'POST',
-            url: '${request.getContextPath}/findByNoticeOne/id=' + recipient1,
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-                innerValue = '<b>"' + data.writer + '님의 ' + data.title + '"</b>';
 
-                getName.innerHTML = innerValue;
-                getId[1].value = data.id;
-            }
-        })
-    });
-</script>
-<!-- delete 모달 -->
 
 <!-- 체크박스 전체 선택 -->
 <script>    
@@ -713,6 +806,8 @@
 </script>
 <!-- 체크박스 전체 선택 -->
 
+
+
 <!-- timestamp To stringDate -->
 <script>
     function timestampToStringDate(dataDate) {
@@ -747,64 +842,6 @@
 </script>
 <!-- timestamp To stringDate -->
 
-
-
-
-<script>
-    $(()=>{
-        getNoticePage();
-
-        }
-    );
-
-    function getNoticePage() {
-        // alert("들어왔다");
-        $.ajax({
-            type: 'GET',
-            url: '${request.getContextPath}/getNoticePage',
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-
-                var innerValue = '';
-
-                for (var i = 0; i < data.noticeList.content.length; i++) {
-
-                    innerValue += '\n' +
-                        '                                        <tr>\n' +
-                        '                                            <td>\n' +
-                        '                                                <input type="checkbox" name="checkedArr" value="'+data.noticeList.content[i].id+'"/>\n' +
-                        '                                            </td>\n' +
-                        '                                            <td>' + (i + 1) + '</td>\n' +
-                        '                                            <td>\n' +
-                        '                                                <a class="font-blue text-bold underline pointer" style="cursor: pointer;" data-toggle="modal" data-target=".view-modal" data-whatever="' + data.noticeList.content[i].id + '">' + data.noticeList.content[i].title + '</a>' +
-                        '                                            </td>\n' +
-                        '                                            <td>'+data.noticeList.content[i].writer+'</td>\n' +
-                        '                                            <td>'+timestampToStringDate(data.noticeList.content[i].credate)+'</td>\n' +
-                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="view-count-noticeList.id}">'+data.noticeList.content[i].viewcnt+'</td>\n' +
-                        '                                            <td data-whatever="'+data.noticeList.content[i].id+'" class="reply-count-noticeList.id">'+data.noticeList.content[i].replycnt+'</td>\n' +
-                        '                                            <td>\n' +
-                        '                                                <button type="button" class="btn btn-xs btn-success m-0" onclick="location.href=\'./edit?noticeId='+data.noticeList.content[i].id+'\'">편집</button>\n' +
-                        '                                            </td>\n' +
-                        '                                            <td>\n' +
-                        '                                                <button type="button" class="btn btn-xs btn-danger m-0" data-toggle="modal" data-target=".del-modal" data-whatever="'+data.noticeList.content[i].id+'">삭제</button>\n' +
-                        '                                            </td>\n' +
-                        '                                        </tr>';
-                }
-
-
-
-                $("#listContainer").html(innerValue);
-            },
-            error: function (request, status, error){
-                alert("에러가 발생했습니다.");
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-            complete: function (data){
-            }
-        })
-    }
-</script>
 
 
 </body>

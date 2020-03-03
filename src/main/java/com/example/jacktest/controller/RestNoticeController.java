@@ -142,11 +142,10 @@ public class RestNoticeController {
 
 
     // 게시판 - 신규 등록 - 실행
-    @PostMapping(value = "/addExecute/file={uploadFile01}")
-    public ResponseEntity showNoticeAddExecute(@RequestBody @Valid Notice notice,
+    @PostMapping(value = "/addExecute")
+    public ResponseEntity showNoticeAddExecute(@Valid Notice notice,
                                                BindingResult bindingResult,
-                                               @PathVariable(value = "uploadFile01", required = false) MultipartFile file01,
-                                               ModelMap modelMap) throws IOException {
+                                               @RequestParam(value = "uploadFile01", required = false, defaultValue = "NONE") MultipartFile file01) throws IOException {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 
@@ -158,14 +157,15 @@ public class RestNoticeController {
 
 
     // 게시판 - 수정 - 실행
-    @PutMapping(value = "/editExecute/noticeId={noticeId}&file={uploadFile01}")
-    public ResponseEntity showNoticeEditExecute(@RequestBody @Valid Notice notice,
+    @PutMapping(value = "/editExecute/noticeId={noticeId}")
+    public ResponseEntity showNoticeEditExecute(@Valid Notice notice,
                                                 BindingResult bindingResult,
                                                 @PathVariable("noticeId") Long noticeId,
-                                                @PathVariable(value = "uploadFile01", required = false) MultipartFile file01,
+                                                @RequestParam(value = "uploadFile01", required = false, defaultValue = "NONE") MultipartFile file01,
                                                 ModelMap modelMap) throws IOException {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+
         } else {
             noticeService.editNotice(notice, noticeId, file01);
             return ResponseEntity.ok(HttpStatus.OK);

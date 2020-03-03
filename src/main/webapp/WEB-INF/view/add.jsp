@@ -1,5 +1,3 @@
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="kor">
@@ -25,7 +23,7 @@
                 </div>
 
                 <div class="x_content">
-                    <spring:form action="./addExecute" method="post" id="submitForm" onsubmit="submitValidation()" modelAttribute="notice" enctype="multipart/form-data">
+                    <form action="/" method="post" enctype="multipart/form-data" id="submitForm" onsubmit="submitValidation()">
                         <div class="col-md-12">
                             <table class="table table-bordered m-0">
                                 <colgroup>
@@ -38,8 +36,7 @@
                                     <th class="text-center">제목</th>
                                     <td>
                                         <div class="input-group">
-                                            <spring:input path="title" type="text"  onchange="titleChange()" class="form-control" required="required" placeholder="제목을 입력해 주세요."/>
-                                            <spring:errors path="title"></spring:errors>
+                                            <input type="text" name="title" onchange="titleChange()" class="form-control" required="required" placeholder="제목을 입력해 주세요." />
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-info btn-sm" onclick="existsTitle()">중복확인</button>
                                                 <input type="hidden" id="existsValid" value="NO">
@@ -52,16 +49,14 @@
                                 <tr>
                                     <th class="text-center">내용</th>
                                     <td>
-                                        <spring:textarea path="contents" type="textarea" row="5" style="resize: none; overflow: auto;" class="form-control" placeholder="내용을 입력해 주세요."/>
-                                        <spring:errors path="contents"></spring:errors>
+                                        <textarea name="contents" rows="5" style="resize: none; overflow: auto;" class="form-control" placeholder="내용을 입력해 주세요." ></textarea>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <th class="text-center">작성자 이름</th>
                                     <td>
-                                        <spring:input path="writer" type="text" class="form-control" required="required" placeholder="작성자 이름을 입력해 주세요."/>
-                                        <spring:errors path="writer"></spring:errors>
+                                        <input type="text" name="writer" class="form-control" required="required" placeholder="작성자 이름을 입력해 주세요." />
                                     </td>
                                 </tr>
 
@@ -95,7 +90,7 @@
                                 <button type="button" class="btn btn-default btn-sm" onclick="location.href='./list'">취소</button>
                             </div>
                         </div>
-                    </spring:form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -128,6 +123,50 @@
 </div>
 <!-- 확인 모달 -->
 
+
+
+<%-- 폼 전송 함수 --%>
+<script>
+    var title = $("input[name='title']")[0];
+    var contents = $("textarea[name='contents']")[0];
+    var writer = $("input[name='writer']")[0];
+    var uploadFile01 = $("input[name='uploadFile01']")[0];
+
+    function transferForm() {
+        var form = $("#submitForm")[0];
+        var formData = new FormData();
+
+        formData.append("title", title.value);
+        formData.append("contents", contents.value);
+        formData.append("writer", writer.value);
+        formData.append("uploadFile01", uploadFile01.files[0]);
+
+
+        $.ajax({
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            url: '${request.getContextPath}/addExecute',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert("저장 완료!");
+                location.href='./list';
+            },
+            error: function (request, status, error){
+                alert("에러가 발생했습니다.");
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            complete: function (data){
+            }
+        })
+    }
+</script>
+<%-- 폼 전송 함수 --%>
+
+
+
+
 <!-- form-submit 클릭 이벤트 -->
 <script>
     var form = document.querySelector('#submitForm');
@@ -138,7 +177,7 @@
 
             // Modal 확인창에서 'ok' 클릭하면 바로 Submit 한다.
             $('#saveChanges').click(function () {
-                form.submit();
+                transferForm();
             });
         }       
 
@@ -149,7 +188,7 @@
 
 <!-- 중복확인 Validation -->
 <script>
-    var title = document.getElementById("title");
+    var title = $("input[name='title']")[0];
 
     // 중복 여부 확인
     function submitValidation() {
@@ -168,7 +207,6 @@
     // ajax로 제목 중복확인
     function existsTitle() {
         $("#exists_check").css("color", "red");
-        // var title = $("input#title[name='title']").val();
         
         if (title.value == null || title.value == '') {
             $("#exists_check").text("제목을 입력해 주세요.");
