@@ -111,10 +111,10 @@ public class NoticeServiceImpl implements NoticeService {
         noticeOne.setModdate(toolsUtil.currentDateInTimestamp());
 
         if (!file01.isEmpty()) { // 파일 저장
+            toolsUtil.deleteFileIfExists(noticeOne.getFilepath(), uploadPath); // 기존 파일 삭제
+
             noticeOne.setFilename(file01.getOriginalFilename());
             noticeOne.setFilepath(toolsUtil.uploadFile(file01, uploadPath));
-
-            toolsUtil.deleteFileIfExists(noticeOne.getFilepath(), uploadPath); // 기존 파일 삭제
         }
 
         Notice saveNoticeOne = noticeRepository.save(noticeOne);
