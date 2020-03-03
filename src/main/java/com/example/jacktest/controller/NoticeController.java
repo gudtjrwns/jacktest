@@ -13,13 +13,17 @@ import com.example.jacktest.services.ReplyService;
 import com.example.jacktest.utils.ToolsUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -210,5 +214,13 @@ public class NoticeController {
 
         return "common/msg";
     }
-    
+
+
+    // 파일 다운로드
+    @RequestMapping(value = "downloadNoticeFileData/id={id}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downloadNoticeFileData(@PathVariable("id") Long id) throws IOException {
+        ResponseEntity<InputStreamResource> responseEntity = noticeService.downloadNoticeFile(id);
+
+        return responseEntity;
+    }
 }

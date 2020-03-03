@@ -481,27 +481,32 @@
 
 <!-- 파일 다운로드 -->
 <script>
+    <%--function downloadFileData2(data) {--%>
+    <%--    $.ajax({--%>
+    <%--        type: 'GET',--%>
+    <%--        url: '${request.getContextPath}/downloadNoticeFileData/id=' + data,--%>
+    <%--        dataType: 'text',--%>
+    <%--        data: {},--%>
+    <%--        success: function (data) {--%>
+    <%--            if(data === null) {--%>
+    <%--                alert("다운로드 실패");--%>
+    <%--            }else {--%>
+    <%--                alert("다운로드 성공!");--%>
+    <%--                console.log(data);--%>
+    <%--            }--%>
+    <%--        },--%>
+    <%--        error: function (request, status, error){--%>
+    <%--            alert("에러가 발생했습니다.");--%>
+    <%--            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);--%>
+    <%--        },--%>
+    <%--        complete: function (data){--%>
+    <%--        }--%>
+    <%--    })--%>
+    <%--}--%>
+
+
     function downloadFileData(data) {
-        $.ajax({
-            type: 'GET',
-            url: '${request.getContextPath}/downloadNoticeFileData/id=' + data,
-            dataType: 'text',
-            data: {},
-            success: function (data) {
-                if(data === null) {
-                    alert("다운로드 실패");
-                }else {
-                    alert("다운로드 성공!");
-                    console.log(data);
-                }
-            },
-            error: function (request, status, error){
-                alert("에러가 발생했습니다.");
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-            complete: function (data){
-            }
-        })
+        location.href = './downloadNoticeFileData/id=' + data;
     }
 </script>
 

@@ -1,6 +1,7 @@
 package com.example.jacktest.controller;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import com.example.jacktest.dao.NoticeValue;
@@ -9,10 +10,7 @@ import com.example.jacktest.services.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -43,15 +41,6 @@ public class RestNoticeController {
         return noticeValueOne;
     }
 
-
-    // 파일 다운로드
-    @GetMapping(value="/downloadNoticeFileData/id={noticeId}")
-    public ResponseEntity<InputStreamResource> downloadNoticeFileData(@PathVariable("noticeId") Long noticeId) throws FileNotFoundException, UnsupportedEncodingException {
-
-        ResponseEntity<InputStreamResource> responseEntity = noticeService.downloadNoticeFile(noticeId);
-        return responseEntity;
-    }
-    
     
     
 }
