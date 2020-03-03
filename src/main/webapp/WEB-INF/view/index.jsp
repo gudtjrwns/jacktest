@@ -27,6 +27,8 @@
                 </div>
 
                 <div class="x_content">
+
+                    <h1><a onclick="getNoticePage();">getNoticePage</a></h1>
                     <c:choose>
                         <c:when test="${emptyValue eq true}">
                             <div>
@@ -835,6 +837,32 @@
     }
 </script>
 <!-- timestamp To stringDate -->
+
+
+
+
+<script>
+    function getNoticePage() {
+        $.ajax({
+            type: 'GET',
+            url: '${request.getContextPath}/getNoticePage',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+
+                console.log(data);
+
+            },
+            error: function (request, status, error){
+                alert("에러가 발생했습니다.");
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            complete: function (data){
+            }
+        })
+    }
+</script>
+
 
 </body>
 </html>
