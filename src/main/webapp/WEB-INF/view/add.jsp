@@ -186,6 +186,8 @@
 </script>
 <!-- form-submit 클릭 이벤트 -->
 
+
+
 <!-- 중복확인 Validation -->
 <script>
     var title = $("input[name='title']")[0];
