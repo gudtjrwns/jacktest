@@ -5,6 +5,7 @@ import com.example.jacktest.dao.PagingVariables;
 import com.example.jacktest.entities.Notice;
 import com.example.jacktest.services.NoticeService;
 
+import com.example.jacktest.services.ReplyService;
 import com.example.jacktest.utils.ToolsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,9 @@ public class RestNoticeController {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private ReplyService replyService;
 
     @Autowired
     private ToolsUtil toolsUtil;
@@ -167,16 +171,27 @@ public class RestNoticeController {
 
     // 게시판 - 삭제
     @DeleteMapping(value = "/deleteExecute/noticeId={noticeId}")
-    public ResponseEntity showNoticeDeleteExecute(@PathVariable("noticeId") Long noticeId){
-        noticeService.deleteNoticeOne(noticeId);
+    public ResponseEntity showNoticeDeleteExecute(@PathVariable("noticeId") Long noticeId) throws IOException {
+
+        noticeService.delFileData(noticeId);                        // 파일 삭제
+        noticeService.deleteNoticeOne(noticeId);                    // 게시글 삭제
+        replyService.deleteAllByDistIdEquals("notice", noticeId);   // 댓글 삭제
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     // 게시판 - 여러 항목 삭제
     @DeleteMapping(value = "/deleteAllExecute/noticeIdList={idList}")
-    public ResponseEntity showNoticeDeleteAllExecute(@PathVariable("idList") List<Long> idList) {
-        noticeService.deleteAllNotice(idList);
+    public ResponseEntity showNoticeDeleteAllExecute(@PathVariable("idList") List<Long> idList) throws IOException {
+
+        noticeService.delAllFileData(idList);   // 파일 삭제
+        noticeService.deleteAllNotice(idList);  // 게시글 삭제
+
+        for (int i = 0; i < idList.size(); i++) {
+            replyService.deleteAllByDistIdEquals("notice", idList.get(i));
+        }
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
