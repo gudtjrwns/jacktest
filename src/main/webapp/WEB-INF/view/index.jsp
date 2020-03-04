@@ -109,11 +109,6 @@
                         <div class="col-md-offset-5">
                             <div class="btn-toolbar">
                                 <div class="btn-group" id="pagingBtnContainer">
-                                    <button class="btn btn-default btn-sm" type="button" onclick="pagingfnc(pageNameValue, page)"><<</button>
-                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>
-                                    <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>
-                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}'">></button>
-                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>
                                 </div>
                             </div>
                         </div>
@@ -175,6 +170,8 @@
 <%--                                </div>--%>
 <%--                            </c:when>--%>
 <%--                            &lt;%&ndash; list 페이징 &ndash;%&gt;--%>
+
+
 
 <%--                            &lt;%&ndash; distList 페이징 &ndash;%&gt;--%>
 <%--                            <c:when test="${pageNameValue eq 'distList'}">--%>
@@ -383,20 +380,25 @@
 <%-- list --%>
 <script>
     $(()=>{
-            getNoticePage();
+            getNoticePage(0);
         }
     );
 
-    function getNoticePage() {
+    function getNoticePage(pageValue) {
+
+        if(typeof pageValue === 'undefined') {
+            pageValue = 0;
+        }
 
         $.ajax({
             type: 'GET',
             url: '${request.getContextPath}/getNoticePage',
             dataType: 'json',
-            data: {},
+            data: {page:pageValue},
             success: function (data) {
 
                 var innerValue = '';
+                var innerPagingValue = '';
 
                 if (data === "NO_CONTENT") {
                     innerValue = '<tr><td colspan="9">등록된 게시글이 없습니다. 새로 등록해주세요.</td></tr>';
@@ -427,8 +429,35 @@
                     }
                 }
 
+                innerPagingValue = '<button class="btn btn-default btn-sm" type="button" onclick="getNoticePage(' + (data.startPage - 2) + ')"><<</button>' +
+                    '<button class="btn btn-default btn-sm" type="button" onclick="getNoticePage(' + (data.currentPage - 2) + ')"><</button>';
+
+
+                for (var i = data.startPage; i <= data.totalPages; i++) {
+                    if (data.currentPage === i) {
+                        innerPagingValue += '<button class="btn btn-default btn-sm active" type="button" onclick="getNoticePage(' + (i - 1) + ')">' + i + '</button>';
+
+                    } else if (data.currentPage !== i) {
+                        innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticePage(' + (i - 1) + ')">' + i + '</button>';
+
+                    } else {
+                        continue;
+                    }
+                }
+
+
+                if (data.currentPage === data.totalPages) {
+                    innerPagingValue += '<button class="btn btn-default btn-sm" type="button">></button>';
+                } else {
+                    innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticePage(' + data.currentPage + ')">></button>';
+                }
+
+
+                innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticePage(' + (data.totalPages - 1) + ')">>></button>';
+
 
                 $("#listContainer").html(innerValue);
+                $("#pagingBtnContainer").html(innerPagingValue);
             },
             error: function (request, status, error){
                 alert("에러가 발생했습니다.");
@@ -447,18 +476,28 @@
 
 <%-- distList 검색 목록 --%>
 <script>
+    var searchType = document.getElementsByName("searchType")[0];
+    var searchValue = document.getElementsByName("searchValue")[0];
+
     $("#searchBtn").on('click', function(){
-        var searchType = document.getElementsByName("searchType")[0];
-        var searchValue = document.getElementsByName("searchValue")[0];
+        getNoticeDistPage(0);
+    });
+
+    function getNoticeDistPage(pageValue) {
+
+        if (typeof pageValue === 'undefined') {
+            pageValue = 0;
+        }
 
         $.ajax({
             type: 'GET',
             url: '${request.getContextPath}/getNoticeDistPage/searchType=' + searchType.value + '&searchValue=' + searchValue.value,
             dataType: 'json',
-            data: {},
+            data: {page:pageValue},
             success: function (data) {
 
                 var innerValue = '';
+                var innerPagingValue = '';
 
                 if (data === "NO_CONTENT") {
                     innerValue = '<tr><td colspan="9">검색된 게시글이 없습니다.</td></tr>';
@@ -490,7 +529,36 @@
                 }
 
 
+                innerPagingValue = '<button class="btn btn-default btn-sm" type="button" onclick="getNoticeDistPage(' + (data.startPage - 2) + ')"><<</button>' +
+                    '<button class="btn btn-default btn-sm" type="button" onclick="getNoticeDistPage(' + (data.currentPage - 2) + ')"><</button>';
+
+
+                for (var i = data.startPage; i <= data.totalPages; i++) {
+                    if (data.currentPage === i) {
+                        innerPagingValue += '<button class="btn btn-default btn-sm active" type="button" onclick="getNoticeDistPage(' + (i - 1) + ')">' + i + '</button>';
+
+                    } else if (data.currentPage !== i) {
+                        innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticeDistPage(' + (i - 1) + ')">' + i + '</button>';
+
+                    } else {
+                        continue;
+                    }
+                }
+
+
+                if (data.currentPage === data.totalPages) {
+                    innerPagingValue += '<button class="btn btn-default btn-sm" type="button">></button>';
+                } else {
+                    innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticeDistPage(' + data.currentPage + ')">></button>';
+                }
+
+
+                innerPagingValue += '<button class="btn btn-default btn-sm" type="button" onclick="getNoticeDistPage(' + (data.totalPages - 1) + ')">>></button>';
+
+
+
                 $("#listContainer").html(innerValue);
+                $("#pagingBtnContainer").html(innerPagingValue);
             },
             error: function (request, status, error){
                 alert("에러가 발생했습니다.");
@@ -499,7 +567,7 @@
             complete: function (data){
             }
         })
-    })
+    }
 </script>
 <%-- distList 검색 목록 --%>
 
@@ -512,25 +580,6 @@
     }
 </script>
 <!-- 파일 다운로드 -->
-
-
-
-
-
-
-<%-- 페이징 --%>
-<script>
-    function pagingfnc() {
-        var innerPageValue = '';
-
-
-
-
-        $("#pagingBtnContainer").html(innerPageValue);
-    }
-</script>
-
-<%-- 페이징 --%>
 
 
 
