@@ -182,7 +182,7 @@ public class RestNoticeController {
 
 
     // 게시판 - 파일 다운로드
-    @GetMapping(value = "/downloadNoticeFileData/noticeId={noticeId}")
+    @GetMapping(value = "/downloadNoticeFileData/noticeId={noticeId}", produces = "application/text; charset=utf8")
     public ResponseEntity<InputStreamResource> showNoticeFileDataDownload(@PathVariable("noticeId") Long noticeId) throws IOException {
         ResponseEntity<InputStreamResource> responseEntity = noticeService.downloadNoticeFile(noticeId);
         return responseEntity;

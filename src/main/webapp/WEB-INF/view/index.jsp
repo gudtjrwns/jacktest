@@ -105,7 +105,21 @@
                         </table>
                     </div>
 
-                        
+                    <div class="row" style="padding-top: 20px;">
+                        <div class="col-md-offset-5">
+                            <div class="btn-toolbar">
+                                <div class="btn-group" id="pagingBtnContainer">
+                                    <button class="btn btn-default btn-sm" type="button" onclick="pagingfnc(pageNameValue, page)"><<</button>
+                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage-2}'"><</button>
+                                    <button class="btn btn-default btn-sm active" type="button" onclick="location.href='./${pageNameValue}?page=${count-1}'">${count}</button>
+                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${currentPage}'">></button>
+                                    <button class="btn btn-default btn-sm" type="button" onclick="location.href='./${pageNameValue}?page=${endPage-1}'">>></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
 <%--                        &lt;%&ndash; 페이징 설정 &ndash;%&gt;--%>
 <%--                        <c:if test="${totalPages <= endPage}">--%>
 <%--                            <c:set var="endPage" value="${totalPages}"></c:set>--%>
@@ -491,32 +505,33 @@
 
 
 
-
-
-
-
-
-
-
-
-
 <!-- 파일 다운로드 -->
 <script>
     function downloadFileData(data) {
+        location.href = '${request.getContextPath}/downloadNoticeFileData/noticeId=' + data;
+    }
+</script>
+<!-- 파일 다운로드 -->
 
-        $.ajax({
-            type: 'GET',
-            url: '${request.getContextPath}/downloadNoticeFileData/noticeId=' + data,
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-                console.log(data)
-            }
-        });
+
+
+
+
+
+<%-- 페이징 --%>
+<script>
+    function pagingfnc() {
+        var innerPageValue = '';
+
+
+
+
+        $("#pagingBtnContainer").html(innerPageValue);
     }
 </script>
 
-<!-- 파일 다운로드 -->
+<%-- 페이징 --%>
+
 
 
 
