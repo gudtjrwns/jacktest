@@ -46,8 +46,23 @@ public class RestNoticeController {
 
 
     // 게시글 정보 가져오기
+    @GetMapping("/findByNoticeOne/noticeId={noticeId}")
+    public ResponseEntity findByNoticeOne(@PathVariable("noticeId") Long noticeId) {
+
+        Optional<Notice> byId = noticeService.optionalNotice(noticeId);
+
+        if (byId.isPresent()) {
+            Notice noticeOne = noticeService.getNoticeOne(noticeId);
+            return ResponseEntity.ok(noticeOne);
+        } else {
+            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    // 조회수 추가 or 게시글 정보 가져오기
     @PostMapping("/findByNoticeOne/id={id}")
-    public ResponseEntity findByNoticeOne(@PathVariable("id") Long id) {
+    public ResponseEntity findByNoticeOneAndAddViewcount(@PathVariable("id") Long id) {
 
         // 조회수 추가
         noticeService.addViewCount(id);
@@ -114,29 +129,6 @@ public class RestNoticeController {
             modelMap.addAttribute("pageNameValue", "distList");
 
             return ResponseEntity.ok(modelMap);
-        }
-    }
-
-
-//    // 게시판 - 신규 등록
-//    @GetMapping(value = "/add")
-//    public ResponseEntity showNoticeAdd(ModelMap modelMap) {
-//        modelMap.addAttribute("notice", new Notice());
-//        return ResponseEntity.ok(modelMap);
-//    }
-
-
-    // 게시판 - 수정
-    @GetMapping(value = "/edit/noticeId={noticeId}")
-    public ResponseEntity showNoticeEdit(@PathVariable("noticeId") Long noticeId) {
-
-        Optional<Notice> byId = noticeService.optionalNotice(noticeId);
-
-        if (byId.isPresent()) {
-            return ResponseEntity.ok(HttpStatus.OK);
-
-        } else {
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
     }
 

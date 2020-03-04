@@ -119,14 +119,48 @@
 
 
 <script>
-    // function getUrlParams(){
-    //     var params = {};
-    //     window.location.search.replace(
-    //         /[?&]+([^=&]+)=([^&]*)gi,
-    //             function(str, key, value){params[key] = value;}
-    //     );
-    //     return params;
-    // }
+    var title = $("input[name='title']")[0];
+    var contents = $("textarea[name='contents']")[0];
+    var writer = $("input[name='writer']")[0];
+    var uploadFile01 = $("input[name='uploadFile01']")[0];
+    var iptFileName01 = $("input#iptFileName01")[0];
+
+
+    function getUrlParams() {
+        var params = {};
+        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+        return params;
+    }
+
+    window.onload = function() {
+        var oParams = getUrlParams();
+
+        $.ajax({
+            type: 'GET',
+            url: '${request.getContextPath}/findByNoticeOne/noticeId=' + oParams.noticeId,
+            dataType : 'json',
+            data: {},
+            success: function (data) {
+
+                if (data === 'NOT_FOUND') {
+                    alert("게시글 정보를 찾을 수 없습니다.");
+
+                } else { // 게시판 정보를 input 박스에 채워넣는다.
+                    title.value = data.title;
+                    contents.value = data.contents;
+                    writer.value = data.writer;
+                    iptFileName01.value = data.filename;
+                }
+
+            },
+            error: function (request, status, error){
+                alert("에러가 발생했습니다.");
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            complete: function (data){
+            }
+        })
+    }
 </script>
 
 
@@ -134,14 +168,12 @@
 
 <%-- 폼 전송 함수 --%>
 <script>
-    var title = $("input[name='title']")[0];
-    var contents = $("textarea[name='contents']")[0];
-    var writer = $("input[name='writer']")[0];
-    var uploadFile01 = $("input[name='uploadFile01']")[0];
-
     function transferForm() {
+        var oParams = getUrlParams();
+
         var form = $("#submitForm")[0];
         var formData = new FormData();
+
 
         formData.append("title", title.value);
         formData.append("contents", contents.value);
@@ -150,9 +182,9 @@
 
 
         $.ajax({
-            type: 'POST',
+            type: 'PUT',
             enctype: 'multipart/form-data',
-            url: '${request.getContextPath}/addExecute',
+            url: '${request.getContextPath}/editExecute/noticeId=' + oParams.noticeId,
             data: formData,
             contentType: false,
             processData: false,
