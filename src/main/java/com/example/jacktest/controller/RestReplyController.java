@@ -43,12 +43,12 @@ public class RestReplyController{
         try {
             List<Reply> replyList = replyService.listAllReplyByDistIdEquals(distName, distId);
             entity = new ResponseEntity<>(replyList, HttpStatus.OK);
-            
+
         }catch (Exception e) {
             e.printStackTrace();
             entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
+
         return entity;
     }
 

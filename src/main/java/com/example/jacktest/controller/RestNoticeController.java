@@ -64,7 +64,7 @@ public class RestNoticeController {
     }
 
 
-    // 조회수 추가 or 게시글 정보 가져오기
+    // 조회수 추가 and 게시글 정보 가져오기
     @PostMapping("/findByNoticeOne/id={id}")
     public ResponseEntity findByNoticeOneAndAddViewcount(@PathVariable("id") Long id) {
 
