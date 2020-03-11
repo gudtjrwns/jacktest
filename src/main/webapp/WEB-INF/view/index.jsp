@@ -141,6 +141,7 @@
                                     <th class="text-center">작성일</th>
                                     <th class="text-center">조회수</th>
                                     <th class="text-center">댓글수</th>
+                                    <th class="text-center">다운로드</th>
                                     <th class="text-center">편집</th>
                                     <th class="text-center">삭제</th>
                                 </tr>
@@ -162,6 +163,16 @@
                                     <td><fmt:formatDate value="${noticeList.credate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
                                     <td data-whatever="${noticeList.id}" class="view-count-${noticeList.id}">${noticeList.viewcnt}</td>
                                     <td data-whatever="${noticeList.id}" class="reply-count-${noticeList.id}">${noticeList.replycnt}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${noticeList.filename eq 'NONE'}">
+
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="./notice/${noticeList.id}/file">${noticeList.filename}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-xs btn-success m-0" onclick="location.href='./edit?noticeId=${noticeList.id}'">편집</button>
                                     </td>
