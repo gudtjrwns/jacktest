@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="kor">
 
@@ -298,8 +298,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <%--댓글 list--%> 
-                
+                <%--댓글 list--%>
+
             </div>
             <div class="clearfix"></div>
             <div class="modal-footer">
@@ -913,14 +913,14 @@
 
 
 <!-- 체크박스 전체 선택 -->
-<script>    
+<script>
     var check = false;
     var chk = document.getElementsByName("checkedArr");
     var chkCheker = [];
     var chkIdList = [];
 
     // 체크박스 전체 선택 버튼 이벤트
-    $("#allChecker").click(function(){        
+    $("#allChecker").click(function(){
         if (check == false) {
             check = true;
             for (var i = 0; i < chk.length; i++) {
